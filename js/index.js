@@ -11,6 +11,8 @@ function getRepositories() {
 }
 
 function displayCommits() {
+  let commit = JSON.parse(this.responseText)
+  console.log("commit", commit)
   
 }
 
@@ -23,7 +25,7 @@ function displayRepositories() {
   console.log(resp)
   let list = `<ul>`
   for(var i =0; i< resp.length; i++) {
-    list += `<li>${resp[i]['owner']['login']}<br /><a href="/${resp[i]['html_url']}</li>`
+    list += `<li>${resp[i]['owner']['login']}<br /><a href="#" data-repo="${resp[i]['name']}" data-username="${resp[i]['owner']['login']}" onclick="getCommits(this)">Get Commits</a></li>`
     
   }
   list+= `</ul>`
@@ -32,4 +34,16 @@ function displayRepositories() {
 
 function getBranches() {
   
+}
+
+function getCommits(e) {
+  
+  console.log("dataset", e.dataset)
+  let commit_repo = e.dataset.repo
+  let username = e.dataset.username
+  
+  const req = new XMLHttpRequest();
+  req.addEventListener('load', displayCommits)
+  req.open('GET',`https://api.github.com/repos/${username}/${commit_repo}/commits`)
+  req.send();
 }
